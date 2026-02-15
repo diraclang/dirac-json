@@ -1,0 +1,14 @@
+{
+  "name": "dirac-json",
+  "version": "0.1.0",
+  "description": "JSON utility library for DIRAC - declarative JSON parsing and access",
+  "type": "module",
+  "main": "lib/index.di",
+  "keywords": [
+    "dirac",
+    "json",
+    "utility"
+  ],
+  "author": "",
+  "license": "MIT"
+}
