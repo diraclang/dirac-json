@@ -7,58 +7,15 @@
 ## 🔴 High Priority
 
 ### Pending
-- [ ] **Object operations with path syntax**: Implement key access and path-based queries for JSON objects
-  - **Why**: Enable working with associative arrays/objects using consistent syntax with `<array>` pattern
-  - **Use case**: Package registry with object keys like `{'dirac-json': [...], 'dirac-mongodb': [...]}`
-  - **Design principle**: Keep consistent with `<array name="var">` pattern - use `name` attribute for variable
-  - **Operations needed**:
-    - `<json name="obj"><getKeys /></json>` - Returns array of object keys
-    - `<json name="obj"><get key="someKey" /></json>` - Get value by simple key
-    - `<json name="obj"><get key="${varKey}" /></json>` - Support variable substitution for dynamic keys
-    - `<json name="obj"><get path="a.b.c" /></json>` - Get nested value with dot notation
-    - `<json name="obj"><get path="items[0].name" /></json>` - Path with array indexing
-    - `<json name="obj"><set key="newKey" value="..." /></json>` - Set value by key
-    - `<json name="obj"><has key="someKey" /></json>` - Check if key exists (returns boolean)
-  - **Syntax consistency**:
-    ```xml
-    <!-- Arrays (existing pattern) -->
-    <array name="myArray"><get index="0" /></array>
-    <array name="myArray"><length /></array>
-    
-    <!-- JSON objects (new pattern - same style) -->
-    <json name="myObject"><get key="field" /></json>
-    <json name="myObject"><get path="a.b.c" /></json>
-    <json name="myObject"><getKeys /></json>
-    ```
-  - **Example workflow**:
-    ```xml
-    <defvar name="packages">{'dirac-json': ['json', 'array'], 'dirac-mongodb': ['mongodb']}</defvar>
-    
-    <!-- Simple key access -->
-    <defvar name="value"><json name="packages"><get key="dirac-json" /></json></defvar>
-    
-    <!-- Path with array index -->
-    <defvar name="firstKeyword"><json name="packages"><get path="dirac-json[0]" /></json></defvar>
-    
-    <!-- Iterate over object keys -->
-    <defvar name="keys"><json name="packages"><getKeys /></json></defvar>
-    <defvar name="count"><array name="keys"><length /></array></defvar>
-    <loop count="${count}">
-      <defvar name="key"><array name="keys"><get index="${i}" /></array></defvar>
-      <defvar name="value"><json name="packages"><get key="${key}" /></json></defvar>
-      <output>Package: <variable name="key" />, Keywords: <variable name="value" /></output>
-    </loop>
-    ```
-  - **Implementation notes**:
-    - `<get>` subroutine supports both `key` (simple) and `path` (complex) attributes
-    - Path parser handles: dot notation (`.field`), bracket notation (`[0]` or `['key']`)
-    - Handle edge cases: missing keys, null values, array out of bounds
-  - **File**: `lib/index.di` - Add nested subroutines to `<json>` tag
+- [ ] **npm publishing**: Publish as standalone package
+  - Currently local project
+  - Version 0.1.0 target
+  - All tests passing (17/17)
 
 ## 🟡 Medium Priority
 
 ### Pending
-- [ ] **Array operations**: Support array indexing and iteration
+- [ ] **Array operations enhancement**: Support more array methods within JSON objects
   - Syntax: `path="items[0].name"` for array access
   - Consider: array length, map, filter operations
 
@@ -87,6 +44,29 @@
   - Version 0.1.0 target
 
 ## ✅ Completed
+
+- [x] **Testing suite** (v0.1.0)
+  - Created 17 comprehensive unit tests
+  - Coverage: All array operations (get, push, pop, shift, unshift, length)
+  - Coverage: All JSON object operations (getKeys, get key/path, has, set, stringify)
+  - Test patterns: Simple operations, path traversal, iteration, edge cases
+  - Test framework: Using dirac test-runner with TEST/EXPECT comments
+  - All 17 tests passing ✓
+  - Test command: `npm test`
+
+- [x] **Object operations with path syntax** (v0.1.0)
+  - Implemented `<json name="var">` pattern matching `<array>` syntax
+  - Operations: `<getKeys />`, `<get key="" jsonPath="" />`, `<set key="">`, `<has key="" />`, `<stringify indent="" />`
+  - Path parser supports dot notation (`a.b.c`) and array indices (`items[0].name`)
+  - Fixed namespace conflict: renamed `param-path` to `param-jsonPath` to avoid Node.js `path` module collision
+  - Tests: All 8 test cases passing in `tests/json-object.test.di`
+  - Key features:
+    - Simple key access: `<get key="field" />`
+    - Path access: `<get jsonPath="a.b.c" />` or `<get jsonPath="items[0].name" />`
+    - Variable substitution: `<get key="${varKey}" />`
+    - Object iteration: `<getKeys />` returns array, iterate with `<loop>`
+    - Existence check: `<has key="field" />` returns boolean
+    - Pretty printing: `<stringify indent="2" />`
 
 - [x] **Basic library structure**
   - Created lib/index.di

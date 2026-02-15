@@ -4,6 +4,9 @@
   "description": "JSON utility library for DIRAC - declarative JSON parsing and access",
   "type": "module",
   "main": "lib/index.di",
+  "scripts": {
+    "test": "node ../dirac/dist/test-runner.js tests"
+  },
   "keywords": [
     "dirac",
     "json",
